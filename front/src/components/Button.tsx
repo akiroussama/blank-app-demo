@@ -1,31 +1,35 @@
 import React from 'react';
 
-interface InputFieldProps
+interface ButtonProps
   extends React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
+      React.ButtonHTMLAttributes<HTMLButtonElement>,
+      HTMLButtonElement
     >,
-    React.AriaAttributes {
-  name: string;
-  label: string;
-  submitted: boolean;
-  requiredMessage: string;
-}
+    React.AriaAttributes {}
 
-const InputField: React.FC<InputFieldProps> = (props) => {
-  const { className, label, submitted, requiredMessage, ...inputProps } = props;
+const Button: React.FC<ButtonProps> = (props) => {
+  const { className, children, ...rest } = props;
   return (
-    <label className="flex flex-col text-lg text-gray-800 mb-2">
-      {label}:
-      <input
-        className={`p-2 text-gray-500 focus:outline-none border-2 ${className}`}
-        {...inputProps}
-      />
-      {submitted && !inputProps.value && (
-        <span className="text-red-500 mt-2">{requiredMessage}</span>
-      )}
-    </label>
+    <button
+      className={`
+              py-2
+              px-6
+              rounded-sm
+              self-start      
+              text-white
+              bg-cy-blue
+              duration-20
+              border-solid border-2 border-transparent
+              hover:border-gray-700 hover:bg-cy-blue
+              disabled:opacity-50   
+              disabled:cursor-not-allowed
+              ${className}
+            `}
+      {...rest}
+    >
+      {children}
+    </button>
   );
 };
 
-export default InputField;
+export default Button;
