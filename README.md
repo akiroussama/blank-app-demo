@@ -11,6 +11,10 @@ yarn add -D vitest
 
 Add config to package.json:
 "test": "vitest",
+
+install @vitest/coverage-c8 for coverage:
+yarn add -D @vitest/coverage-c8
+add config to package.json:
 "coverage": "vitest run --coverage"
 
 
@@ -29,8 +33,8 @@ describe('something truthy and falsy', () => {
 });
 
 4) Add React testing library and jsdom for more realistic testing:
-Add @testing-library/react and jsdom:
-yarn add -D @testing-library/react @testing-library/jest-dom
+Add React testing library and jest-dom:
+yarn add -D @testing-library/react @testing-library/jest-dom jsdom
 
 Add config to vitest.config.ts:
 import { defineConfig } from "vite";
