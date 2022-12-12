@@ -123,3 +123,16 @@ describe("Real test", () => {
         expect(await screen.findByText(/count is 2/i)).toBeInTheDocument();
     })
 })
+
+
+6) Add login page
+
+7) Add Quotes list page ( fetch data from api )
+
+8) Install cypress :  yarn add cypress --dev
+
+9) add E2E test for app, login and quotes list page
+
+10) run E2E test : yarn add cypress --dev
+
+
