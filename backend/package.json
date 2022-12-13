@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@apollo/server": "^4.3.0",
-    "graphql": "^16.6.0"
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^16.6.0",
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.14",

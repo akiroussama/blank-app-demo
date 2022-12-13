@@ -1,19 +1,13 @@
+import { gql, useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import Button from "./Button";
 import InputField from "./InputField";
 
 interface LoginFormProps {
-	onLogin: ({
-		username,
-		password,
-	}: {
-		username: string;
-		password: string;
-	}) => void;
+	onLogin: ({ token, error }: { token: string; error: string }) => void;
 	title?: string;
 	errorMessage?: string;
 }
-
 const LoginForm: React.FC<LoginFormProps> = ({
 	onLogin,
 	title = "Log In",
@@ -22,13 +16,34 @@ const LoginForm: React.FC<LoginFormProps> = ({
 	const [submitted, setSubmitted] = useState(false);
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-
-	const handleFormSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
-		if (username && password) {
-			onLogin({ username, password });
+	// add jwt token to local storage
+	const [token, setToken] = useState("");
+	const LOGIN_MUTATION = gql`
+		mutation Login($username: String!, $password: String!) {
+			login(username: $username, password: $password)
 		}
+	`;
+
+	// add authenification using jwt token to local storage from graphql mutation
+	const [login, { data }] = useMutation(LOGIN_MUTATION, {
+		onCompleted: (data) => {
+			setToken(data.login);
+			localStorage.setItem("token", token);
+			onLogin({ token, error: "" });
+		},
+		onError: (error) => {
+			onLogin({ token: "", error: error.message });
+		},
+	});
+
+	const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		setSubmitted(true);
+		if (username && password) {
+			login({ variables: { username, password } });
+		} else {
+			onLogin({ token: "", error: "Username and password are required" });
+		}
 	};
 
 	return (
@@ -56,7 +71,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
 						value={password}
 						autoComplete="current-password"
 					/>
-					<Button type="submit" className="bg-purple-900">Login</Button>
+					<Button type="submit" className="bg-purple-900">
+						Login
+					</Button>
 					{errorMessage && (
 						<div className="text-red-500 mt-2">{errorMessage}</div>
 					)}

@@ -1,13 +1,23 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+const SECRET = "VIEL_ARE_THE_BEST";
+const users = [
+	{
+		id: 1,
+		username: "admin",
+		password: bcrypt.hashSync("admin", 10),
+	},
+];
+// add graphql login mutation for jwt token
 const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
+  type User {
+    id: ID
+	username: String
+	password: String
+  }
+	    # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
     id: ID
     title: String
@@ -17,10 +27,15 @@ const typeDefs = `#graphql
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
+	type Query {
+		users: [User]
+		books: [Book]
+	}
+	type Mutation {
+		login(username: String!, password: String!): String
+	}
 `;
+
 const books = [
 	{
 		id: 1,
@@ -40,11 +55,23 @@ const books = [
 	// add other books data here
 ];
 
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
 const resolvers = {
 	Query: {
+		users: () => users,
 		books: () => books,
+	},
+	Mutation: {
+		login: async (parent, { username, password }, context, info) => {
+			const user = users.find((u) => u.username === username);
+			if (!user) {
+				throw new Error("User not found");
+			}
+			const valid = await bcrypt.compare(password, user.password);
+			if (!valid) {
+				throw new Error("Incorrect password");
+			}
+			return jwt.sign({ userId: user.id }, SECRET);
+		},
 	},
 };
 

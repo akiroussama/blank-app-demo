@@ -8,11 +8,11 @@ function App() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isAuthed, setIsAuthed] = useState(false);
     const [username, setUsername] = useState('');
-    const handleLogin = ({ username, password }: { username: string; password: string }) => {
-        if (username === 'admin' && password === 'admin') {
+    const handleLogin = ({ token, error }: { token: string, error: string }) => {
+        if (token) {
             setIsAuthed(true);
         } else {
-            setErrorMessage('Invalid username or password');
+            setErrorMessage(error || 'Invalid username or password');
         }
   };
  
