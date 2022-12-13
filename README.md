@@ -135,4 +135,99 @@ describe("Real test", () => {
 
 10) run E2E test : yarn add cypress --dev
 
+11) Create backend:
+   a) create a new folder for backend 
+   b) init a new node project: yarn init -y
+   c) install apollo server: yarn add @apollo/server
+   https://www.apollographql.com/docs/apollo-server/getting-started/
+   d) create src folder and index.js file :
+    (windows): mkdir src & echo.> src/index.js
+    (linux): mkdir src && touch src/index.js
+    (mac): mkdir src && touch src/index.js
+
+
+12 ) install with typescript:
+    a) yarn add  typescript @types/node --dev
+    b) yarn tsc --init ( to create tsconfig.json file )
+    c) add config to tsconfig.json:
+     {
+        "compilerOptions": {
+          "rootDirs": ["src"],
+          "outDir": "dist",
+          "lib": ["es2020"],
+          "target": "es2020",
+          "module": "esnext",
+          "moduleResolution": "node",
+          "esModuleInterop": true,
+          "types": ["node"]
+        }
+      }
+
+     d) Finally, replace the default scripts entry in your package.json file with the following type and scripts entries:
+     {
+  // ...etc.
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  }
+  // other dependencies
+}
+12) install graphql: yarn add graphql
+13) add graphql schema:
+    b) add schema :
+        const typeDefs = `#graphql
+        # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+
+        # This "Book" type defines the queryable fields for every book in our data source.
+        type Book {
+          title: String
+          author: String
+        }
+
+        # The "Query" type is special: it lists all of the available queries that
+        # clients can execute, along with the return type for each. In this
+        # case, the "books" query returns an array of zero or more Books (defined above).
+        type Query {
+          books: [Book]
+        }
+      `;
+14) add resolvers:
+    const books = [
+      {
+        title: "The Awakening",
+        author: "Kate Chopin",
+      },
+      {
+        title: "City of Glass",
+        author: "Paul Auster",
+      },
+    ];
+
+    // Resolvers define how to fetch the types defined in your schema.
+    // This resolver retrieves books from the "books" array above.
+    const resolvers = {
+      Query: {
+        books: () => books,
+      },
+    };
+
+15) add apollo server to index.js::
+  
+// The ApolloServer constructor requires two parameters: your schema
+// definition and your set of resolvers.
+const server = new ApolloServer({
+	typeDefs,
+	resolvers,
+});
+
+// Passing an ApolloServer instance to the `startStandaloneServer` function:
+//  1. creates an Express app
+//  2. installs your ApolloServer instance as middleware
+//  3. prepares your app to handle incoming requests
+const { url } = await startStandaloneServer(server, {
+	listen: { port: 4000 },
+});
+
+console.log(`🚀  Server ready at: ${url}`);
 
