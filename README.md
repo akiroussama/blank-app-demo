@@ -181,6 +181,7 @@ describe("Real test", () => {
 
         # This "Book" type defines the queryable fields for every book in our data source.
         type Book {
+          id: ID
           title: String
           author: String
         }
@@ -195,10 +196,12 @@ describe("Real test", () => {
 14) add resolvers:
     const books = [
       {
+        id: 1,
         title: "The Awakening",
         author: "Kate Chopin",
       },
       {
+        id: 2,
         title: "City of Glass",
         author: "Paul Auster",
       },
@@ -231,3 +234,25 @@ const { url } = await startStandaloneServer(server, {
 
 console.log(`🚀  Server ready at: ${url}`);
 
+16) Add apollo client to frontend:
+   https://www.apollographql.com/docs/react/get-started
+    a) yarn add @apollo/client graphql
+    b) add apollo client to index.js:
+   import {
+      ApolloClient,
+      InMemoryCache,
+      ApolloProvider,
+      useQuery,
+      gql
+    } from "@apollo/client";
+    c) add apollo client to index.js:
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000',
+      cache: new InMemoryCache()
+    });
+    d) add apollo provider to index.js:
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+17) Add quotes list page:
+    

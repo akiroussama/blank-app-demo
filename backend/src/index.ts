@@ -9,6 +9,7 @@ const typeDefs = `#graphql
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
+    id: ID
     title: String
     author: String
   }
@@ -22,13 +23,21 @@ const typeDefs = `#graphql
 `;
 const books = [
 	{
+		id: 1,
 		title: "The Awakening",
 		author: "Kate Chopin",
 	},
 	{
+		id: 2,
 		title: "City of Glass",
 		author: "Paul Auster",
 	},
+	{
+		id: 3,
+		title: "The Great Gatsby",
+		author: "F. Scott Fitzgerald",
+	},
+	// add other books data here
 ];
 
 // Resolvers define how to fetch the types defined in your schema.
